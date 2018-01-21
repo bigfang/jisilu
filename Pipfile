@@ -9,6 +9,9 @@ name = "pypi"
 
 requests = "*"
 pyquery = "*"
+peewee = "*"
+logbook = "*"
+"psycopg2" = "*"
 
 
 [dev-packages]

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "7584e74b329101b79efe408978b69e163cabec4f9c66656ffbd382ee36daed6a"
+            "sha256": "059cb4f002f1627ec1d202ef74647921847c0d73d41458fd50d28513a3c9c611"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -43,9 +43,21 @@
             "hashes": [],
             "version": "==2.6"
         },
+        "logbook": {
+            "hashes": [],
+            "version": "==1.1.0"
+        },
         "lxml": {
             "hashes": [],
             "version": "==4.1.1"
+        },
+        "peewee": {
+            "hashes": [],
+            "version": "==2.10.2"
+        },
+        "psycopg2": {
+            "hashes": [],
+            "version": "==2.7.3.2"
         },
         "pyquery": {
             "hashes": [],
