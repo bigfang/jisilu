@@ -12,6 +12,7 @@ pyquery = "*"
 peewee = "*"
 logbook = "*"
 "psycopg2" = "*"
+arrow = "*"
 
 
 [dev-packages]

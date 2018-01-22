@@ -59,7 +59,7 @@ class Posts(BaseModel):
     views = IntegerField(null=True, verbose_name='浏览量')
     focus = IntegerField(null=True, verbose_name='关注数')
 
-    last_actived_at = DateTimeField(verbose_name='最后活动时间')
+    last_actived_at = DateTimeField(null=True, verbose_name='最后活动时间')
     updated_at = DateTimeField(verbose_name='创建时间')
     crawled_at = DateTimeField(default=datetime.now, verbose_name='抓取时间')
 
