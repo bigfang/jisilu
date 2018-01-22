@@ -5,6 +5,7 @@ from peewee import *
 from datetime import datetime
 
 try:
+    raise ImportError
     import conf
     import psycopg2
     from playhouse.pool import PooledPostgresqlExtDatabase
