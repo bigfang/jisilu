@@ -29,22 +29,27 @@ END = 261928
 def fetch_reply():
     pass
 
+
 def fetch_post(pid):
     resp = session.get('https://www.jisilu.cn/question/%s' % pid, headers=HEADERS)
     dollar = pq(resp.content)
     # with open('ppp.html', 'r') as f:
     #     dollar = pq(f.read())
-    user = {
-        'id': dollar('a.aw-user-name').attr('data-id'),
-        'name': dollar('.aw-side-bar a.aw-user-name').text(),
-        'linkname': unquote(dollar('.aw-side-bar a.aw-user-name').text().split('/')[-1]),
-    }
-    u = Users.insert(user).execute()
+
+    users = {}
+    for u in dollar('a.aw-user-name'):
+        user = {pq(u).attr('data-id'): {
+            'id': pq(u).attr('data-id'),
+            'name': pq(u).text(),
+            'linkname': unquote(pq(u).text().split('/')[-1])
+        }}
+        users.update(user)
+    Users.insert_many(users.values()).execute()
 
     last_actived_at, views, focus = [pq(i).text() for i in dollar('.aw-side-bar-mod-body li span')]
     post = {
         'id': pid,
-        'user': u,
+        'user': dollar('a.aw-user-name').attr('data-id'),
         'title': dollar('.aw-mod-head h1').text(),
         'content': dollar('.aw-mod-body .aw-question-detail-txt').remove('div').text().strip(),
         'updated_at': dollar('.aw-question-detail-meta span.pull-left').text(),
