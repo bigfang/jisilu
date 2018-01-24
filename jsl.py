@@ -22,8 +22,8 @@ HEADERS = {
 }
 
 session = Session()
-START = 94814
-END = 260000
+START = 259999
+END = 260052
 
 def fetch_posts(pid):
     log.info('start fetch - pid: %s' % pid)

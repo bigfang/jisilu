@@ -13,6 +13,9 @@ peewee = "*"
 logbook = "*"
 "psycopg2" = "*"
 arrow = "*"
+jieba = "*"
+pandas = "*"
+matplotlib = "*"
 
 
 [dev-packages]
