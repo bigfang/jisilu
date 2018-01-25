@@ -16,6 +16,7 @@ arrow = "*"
 jieba = "*"
 pandas = "*"
 matplotlib = "*"
+fire = "*"
 
 
 [dev-packages]

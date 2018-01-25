@@ -92,11 +92,11 @@ class TopicUser(BaseModel):
 
 if __name__ == '__main__':
     try:
-      Provs.create_table()
-      Users.create_table()
-      Posts.create_table()
-      Replies.create_table()
-      Topics.create_table()
-      TopicUser.create_table()
+        Provs.create_table()
+        Users.create_table()
+        Posts.create_table()
+        Replies.create_table()
+        Topics.create_table()
+        TopicUser.create_table()
     except Exception as err:
         print(err)

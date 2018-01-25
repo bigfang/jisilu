@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "e1ff5efc60ee80606c73ccbd8e4dc2a8fcc14f3d6e4447f0d6c5b32e9d6de5c9"
+            "sha256": "f7a914e596bdb2ec91b7fb9efee715ae21edbe640a72966e5e4c4a4e4255c213"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -46,6 +46,10 @@
         "cycler": {
             "hashes": [],
             "version": "==0.10.0"
+        },
+        "fire": {
+            "hashes": [],
+            "version": "==0.1.2"
         },
         "idna": {
             "hashes": [],
