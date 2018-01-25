@@ -91,4 +91,5 @@ conf.py
 Untitled.ipynb
 *.html
 *.sqlite
+*.sqlite-journal
 *.backup

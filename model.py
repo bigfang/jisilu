@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from peewee import *
+from playhouse.migrate import *
 from datetime import datetime
 
 try:
@@ -19,8 +20,10 @@ try:
         password=conf.passwd,
         autorollback=True,
         register_hstore=False)
+    migrator = PostgresqlMigrator(db)
 except ImportError:
     db = SqliteDatabase('db.sqlite')
+    migrator = SqliteMigrator(db)
 
 
 class BaseModel(Model):
@@ -31,6 +34,11 @@ class BaseModel(Model):
 class Provs(BaseModel):
     id = BigIntegerField(null=False, primary_key=True, verbose_name='id')
     prov = CharField(null=True, unique=True, verbose_name='省份')
+
+
+class Industry(BaseModel):
+    id = BigIntegerField(null=False, primary_key=True, verbose_name='id')
+    industry = CharField(null=False, unique=True, verbose_name='行业')
 
 
 class Users(BaseModel):
@@ -92,11 +100,27 @@ class TopicUser(BaseModel):
 
 if __name__ == '__main__':
     try:
+        Industry.create_table()
         Provs.create_table()
         Users.create_table()
         Posts.create_table()
         Replies.create_table()
         Topics.create_table()
         TopicUser.create_table()
+        print('create table completed!')
+    except Exception as err:
+        print(err)
+
+    try:
+        user_lv_field = IntegerField(null=True, verbose_name='用户等级')
+        user_industry_field = ForeignKeyField(Industry, null=True, related_name='users', to_field=Industry.id, verbose_name='行业')
+        migrate(
+            migrator.add_not_null('provs', 'prov'),
+            migrator.drop_column('users', 'lv'),
+            migrator.add_column('users', 'lv', user_lv_field),
+            migrator.drop_column('users', 'industry'),
+            migrator.add_column('users', 'industry', user_industry_field),
+        )
+        print('migration completed!')
     except Exception as err:
         print(err)
