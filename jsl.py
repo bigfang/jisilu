@@ -105,7 +105,7 @@ class FetchPost(object):
 
     def multi(self, op=1, ed=260052):
         for pid in range(op, ed):
-            self.cpost(pid)
+            self.single(pid)
 
 
 class FetchUser(object):
@@ -163,6 +163,27 @@ class FetchUser(object):
         }
         return details
 
+    def __extract_topics(self, uid, dollar):
+        topics, topicusers = [], []
+        elem = dollar('dd.aw-user-center-details-good-topic > div')
+        for e in elem:
+            tid = pq(e)('a').attr('data-id')
+            topic = unquote(pq(e)('a').attr('href').split('/')[-1])
+            approve, thank = pq(e).remove('a')('span').text().split(' ')
+            user = uid,
+
+            topics.append({
+                'id': tid,
+                'topic': topic
+            })
+            topicusers.append({
+                'user': uid,
+                'topic': tid,
+                'approve': approve,
+                'thank': thank
+            })
+        return topics, topicusers
+
     def single(self, uid=None, linkname=None, save=False):
         log.info('start fetching user - uid: %s | linkname: %s' % (uid, linkname))
         url = 'https://www.jisilu.cn/people/%s' % (uid or linkname)
@@ -171,6 +192,12 @@ class FetchUser(object):
         if '用户不存在'.encode() in resp.content:
             log.warn('deleted user - uid: %s | linkname: %s' % (uid, linkname))
             return
+
+        if uid:
+            topics, topicusers = self.__extract_topics(uid, dollar)
+            if topics:
+                Topics.insert_many(topics).on_conflict('IGNORE').execute()
+                TopicUser.insert_many(topicusers).on_conflict('IGNORE').execute()
 
         details = self.__extract_user_details(dollar)
         details.update({
@@ -184,7 +211,7 @@ class FetchUser(object):
     def multi2(self, op=1, ed=228090, step=100):
         rcds = []
         for uid in range(op, ed):
-            rcd = self.cuser(uid)
+            rcd = self.single(uid)
             if not rcd:
                 continue
             rcds.append(rcd)
@@ -198,7 +225,7 @@ class FetchUser(object):
                 .where((Users.id >= op))# & (Users.last_signin_at >> None))
                 .order_by(Users.id))
         for u in users:
-            rcd = self.cuser(uid=u.id)
+            rcd = self.single(uid=u.id)
             if not rcd:
                 continue
             Users.insert(rcds).on_conflict('REPLACE').execute()
