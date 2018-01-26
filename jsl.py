@@ -3,7 +3,7 @@
 
 import arrow
 from pyquery import PyQuery as pq
-from requests import Session
+from requests import Session, adapters
 import re, hashlib
 from urllib.parse import unquote
 
@@ -25,9 +25,10 @@ HEADERS = {
 def gen_id(some):
     return int(hashlib.sha1(some.encode()).hexdigest(), 16) % (10 ** 8)
 
-class Jisilu(object):
+class FetchPost(object):
     def __init__(self):
         self.__session = Session()
+        self.__session.mount('https://', adapters.HTTPAdapter(max_retries=3))
 
     def __extract_users(self, dollar):
         users = {}
@@ -80,8 +81,7 @@ class Jisilu(object):
             replies.update(reply)
         return replies
 
-
-    def cpost(self, pid):
+    def single(self, pid):
         log.info('start fetching post - pid: %s' % pid)
         resp = self.__session.get('https://www.jisilu.cn/question/%s' % pid, headers=HEADERS)
         dollar = pq(resp.content)
@@ -101,11 +101,17 @@ class Jisilu(object):
         replies = self.__extract_replies(pid, dollar)
         if replies:
             Replies.insert_many(replies.values()).on_conflict('IGNORE').execute()
+        return post
 
-    def cposts(self, op=1, ed=260052):
+    def multi(self, op=1, ed=260052):
         for pid in range(op, ed):
             self.cpost(pid)
 
+
+class FetchUser(object):
+    def __init__(self):
+        self.__session = Session()
+        self.__session.mount('https://', adapters.HTTPAdapter(max_retries=3))
 
     def __parse_last_signin(self, dollar):
         for elem in dollar('.aw-user-center-details dl'):
@@ -153,32 +159,57 @@ class Jisilu(object):
             'visits': re.findall('\d+', (dollar('i.i-user-visits').parent().text()))[0],
             'locate': dollar('i.i-user-locate + a + a').text().strip() or None,
             'last_signin_at': self.__parse_last_signin(dollar),
-            # 'lv': lvs.get(lvk.text().strip(' »'))
+            'level': lvs.get(lvk.text().strip(' »'))
         }
         return details
 
-    def cuser(self, uid=None, linkname=None):
+    def single(self, uid=None, linkname=None, save=False):
         log.info('start fetching user - uid: %s | linkname: %s' % (uid, linkname))
-        resp = self.__session.get('https://www.jisilu.cn/people/%s' % uid, headers=HEADERS)
+        url = 'https://www.jisilu.cn/people/%s' % (uid or linkname)
+        resp = self.__session.get(url, headers=HEADERS)
         dollar = pq(resp.content)
+        if '用户不存在'.encode() in resp.content:
+            log.warn('deleted user - uid: %s | linkname: %s' % (uid, linkname))
+            return
 
         details = self.__extract_user_details(dollar)
         details.update({
             'id': uid,
             'linkname': unquote(resp.url.split('/')[-1]),
         })
+        if save:
+            Users.insert(detail).on_conflict('REPLACE').execute()
+        return details
 
-        Users.insert(details).on_conflict('REPLACE').execute()
+    def multi2(self, op=1, ed=228090, step=100):
+        rcds = []
+        for uid in range(op, ed):
+            rcd = self.cuser(uid)
+            if not rcd:
+                continue
+            rcds.append(rcd)
+            if len(rcds) % step == 0:
+                log.info('updating %s records' % step)
+                Users.insert_many(rcds).on_conflict('REPLACE').execute()
+        Users.insert_many(rcds).on_conflict('REPLACE').execute()
 
-
-    def cusers(self, op=1):
+    def multi(self, op=1):
         users = (Users.select(Users.id)
                 .where((Users.id >= op))# & (Users.last_signin_at >> None))
                 .order_by(Users.id))
         for u in users:
-            self.cuser(uid=u.id)
+            rcd = self.cuser(uid=u.id)
+            if not rcd:
+                continue
+            Users.insert(rcds).on_conflict('REPLACE').execute()
+
+
+class Pipeline(object):
+    def __init__(self):
+        self.post = FetchPost()
+        self.user = FetchUser()
 
 
 if __name__ == '__main__':
     import fire
-    fire.Fire(Jisilu)
+    fire.Fire(Pipeline)

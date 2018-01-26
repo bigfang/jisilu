@@ -33,7 +33,7 @@ class BaseModel(Model):
 
 class Provs(BaseModel):
     id = BigIntegerField(null=False, primary_key=True, verbose_name='id')
-    prov = CharField(null=True, unique=True, verbose_name='省份')
+    prov = CharField(null=False, unique=True, verbose_name='省份')
 
 
 class Industry(BaseModel):
@@ -54,7 +54,8 @@ class Users(BaseModel):
     visits = IntegerField(null=True, verbose_name='访问量')
     prov = ForeignKeyField(Provs, null=True, related_name='users', verbose_name='省份')
     locate = CharField(null=True, verbose_name='地区')
-    industry = CharField(null=True, verbose_name='行业')
+    industry = ForeignKeyField(Industry, null=True, related_name='users', verbose_name='行业')
+    level = IntegerField(null=True, verbose_name='用户等级')
 
     last_signin_at = DateTimeField(null=True, verbose_name='最后登录时间')
     crawled_at = DateTimeField(default=datetime.now, verbose_name='抓取时间')
@@ -112,14 +113,13 @@ if __name__ == '__main__':
         print(err)
 
     try:
-        user_lv_field = IntegerField(null=True, verbose_name='用户等级')
-        user_industry_field = ForeignKeyField(Industry, null=True, related_name='users', to_field=Industry.id, verbose_name='行业')
+        raise Exception('NO NEED IN PRODUCT ENV!')
         migrate(
             migrator.add_not_null('provs', 'prov'),
-            migrator.drop_column('users', 'lv'),
-            migrator.add_column('users', 'lv', user_lv_field),
+            migrator.drop_column('users', 'level'),
+            migrator.add_column('users', 'level', Users.level),
             migrator.drop_column('users', 'industry'),
-            migrator.add_column('users', 'industry', user_industry_field),
+            migrator.add_column('users', 'industry_id', Users.industry),
         )
         print('migration completed!')
     except Exception as err:
