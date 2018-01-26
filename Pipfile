@@ -17,6 +17,7 @@ jieba = "*"
 pandas = "*"
 matplotlib = "*"
 fire = "*"
+wordcloud = "*"
 
 
 [dev-packages]

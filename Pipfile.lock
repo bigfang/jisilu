@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f7a914e596bdb2ec91b7fb9efee715ae21edbe640a72966e5e4c4a4e4255c213"
+            "sha256": "422996ed73d5d0700e4e49d9f03857aac62218796dd837059d9f56e4764abd7e"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -9,9 +9,9 @@
             "os_name": "posix",
             "platform_machine": "x86_64",
             "platform_python_implementation": "CPython",
-            "platform_release": "17.3.0",
+            "platform_release": "17.4.0",
             "platform_system": "Darwin",
-            "platform_version": "Darwin Kernel Version 17.3.0: Thu Nov  9 18:09:22 PST 2017; root:xnu-4570.31.3~1/RELEASE_X86_64",
+            "platform_version": "Darwin Kernel Version 17.4.0: Sun Dec 17 09:19:54 PST 2017; root:xnu-4570.41.2~1/RELEASE_X86_64",
             "python_full_version": "3.6.4",
             "python_version": "3.6",
             "sys_platform": "darwin"
@@ -75,6 +75,10 @@
             "hashes": [],
             "version": "==1.13.3"
         },
+        "olefile": {
+            "hashes": [],
+            "version": "==0.44"
+        },
         "pandas": {
             "hashes": [],
             "version": "==0.21.1"
@@ -82,6 +86,10 @@
         "peewee": {
             "hashes": [],
             "version": "==2.10.2"
+        },
+        "pillow": {
+            "hashes": [],
+            "version": "==4.3.0"
         },
         "psycopg2": {
             "hashes": [],
@@ -114,6 +122,10 @@
         "urllib3": {
             "hashes": [],
             "version": "==1.22"
+        },
+        "wordcloud": {
+            "hashes": [],
+            "version": "==1.3.1"
         }
     },
     "develop": {}
