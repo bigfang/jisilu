@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import arrow
+import arrow, time
 from pyquery import PyQuery as pq
 from requests import Session, adapters
 import re, hashlib
@@ -22,8 +22,27 @@ HEADERS = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.112 Safari/537.36'
 }
 
+
 def gen_id(some):
     return int(hashlib.sha1(some.encode()).hexdigest(), 16) % (10 ** 8)
+
+
+def retry(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            attempt = 0
+            while attempt < times:
+                try:
+                    return func(*args, **kwargs)
+                except Exception as err:
+                    log.error('@@@ Error %s @@@ RETRY %s TIMES ' % (err, attempt))
+                    attempt += 1
+                    if attempt == times:
+                        raise err
+                    time.sleep(2 * times)
+        return wrapper
+    return decorator
+
 
 class FetchPost(object):
     def __init__(self):
@@ -81,6 +100,7 @@ class FetchPost(object):
             replies.update(reply)
         return replies
 
+    @retry(3)
     def single(self, pid):
         log.info('start fetching post - pid: %s' % pid)
         resp = self.__session.get('https://www.jisilu.cn/question/%s' % pid, headers=HEADERS)
@@ -184,6 +204,7 @@ class FetchUser(object):
             })
         return topics, topicusers
 
+    @retry(3)
     def single(self, uid=None, linkname=None, save=False):
         log.info('start fetching user - uid: %s | linkname: %s' % (uid, linkname))
         url = 'https://www.jisilu.cn/people/%s' % (uid or linkname)
@@ -208,7 +229,7 @@ class FetchUser(object):
             Users.insert(detail).on_conflict('REPLACE').execute()
         return details
 
-    def multi2(self, op=1, ed=228090, step=100):
+    def multi2(self, op=1, ed=270000, step=100):
         rcds = []
         for uid in range(op, ed):
             rcd = self.single(uid)
