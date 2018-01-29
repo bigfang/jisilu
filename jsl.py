@@ -1,10 +1,10 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import arrow, time
+import arrow
 from pyquery import PyQuery as pq
 from requests import Session, adapters
-import re, hashlib
+import re, hashlib, time
 from urllib.parse import unquote
 
 from model import Users, Posts, Replies, Topics, TopicUser, Provs, Industry
@@ -167,6 +167,9 @@ class FetchUser(object):
         }
         lvk = dollar('.aw-mod-body .aw-user-center-follow-meta > span a em')
 
+        visits_ele = re.findall('\d+', (dollar('i.i-user-visits').parent().text()))
+        if not visits_ele:
+            return None
         details = {
             'name': dollar('.aw-mod-body .aw-user-title +h1').remove('img').text(),
             'signature': dollar('.aw-mod-body .aw-user-title + h1 + span').text().strip(),
@@ -176,7 +179,7 @@ class FetchUser(object):
             'coins': dollar('.aw-mod-body .aw-user-center-follow-meta i[style] + em').text().strip('+'),
             'industry': industry_id,
             'prov': prov_id,
-            'visits': re.findall('\d+', (dollar('i.i-user-visits').parent().text()))[0],
+            'visits': visits_ele[0],
             'locate': dollar('i.i-user-locate + a + a').text().strip() or None,
             'last_signin_at': self.__parse_last_signin(dollar),
             'level': lvs.get(lvk.text().strip(' »'))
@@ -221,12 +224,15 @@ class FetchUser(object):
                 TopicUser.insert_many(topicusers).on_conflict('IGNORE').execute()
 
         details = self.__extract_user_details(dollar)
+        if not details:
+            log.error('linkname error uid: %s' % uid)
+            return None
         details.update({
             'id': uid,
             'linkname': unquote(resp.url.split('/')[-1]),
         })
         if save:
-            Users.insert(detail).on_conflict('REPLACE').execute()
+            Users.insert(details).on_conflict('REPLACE').execute()
         return details
 
     def multi2(self, op=1, ed=270000, step=100):
