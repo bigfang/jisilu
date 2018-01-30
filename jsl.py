@@ -249,13 +249,13 @@ class FetchUser(object):
 
     def multi(self, op=1):
         users = (Users.select(Users.id)
-                .where((Users.id >= op))# & (Users.last_signin_at >> None))
+                .where((Users.id >= op) & (Users.signature >> None))
                 .order_by(Users.id))
         for u in users:
             rcd = self.single(uid=u.id)
             if not rcd:
                 continue
-            Users.insert(rcds).on_conflict('REPLACE').execute()
+            Users.insert(rcd).on_conflict('REPLACE').execute()
 
 
 class Pipeline(object):
