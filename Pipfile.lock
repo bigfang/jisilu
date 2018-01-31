@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "422996ed73d5d0700e4e49d9f03857aac62218796dd837059d9f56e4764abd7e"
+            "sha256": "f83ea7796e459521d648ff965fa56cc363f7a66cede256268416327291c60750"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -114,6 +114,10 @@
         "requests": {
             "hashes": [],
             "version": "==2.18.4"
+        },
+        "seaborn": {
+            "hashes": [],
+            "version": "==0.8.1"
         },
         "six": {
             "hashes": [],

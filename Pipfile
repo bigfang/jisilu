@@ -18,6 +18,7 @@ pandas = "*"
 matplotlib = "*"
 fire = "*"
 wordcloud = "*"
+seaborn = "*"
 
 
 [dev-packages]
