@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "f83ea7796e459521d648ff965fa56cc363f7a66cede256268416327291c60750"
+            "sha256": "7c0826b5b35c0cb1716a002dc03a0c9cbf1f08be3cddae1b2083373c4b70470b"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -29,11 +29,15 @@
     "default": {
         "arrow": {
             "hashes": [],
-            "version": "==0.12.0"
+            "version": "==0.12.1"
+        },
+        "beautifulsoup4": {
+            "hashes": [],
+            "version": "==4.6.0"
         },
         "certifi": {
             "hashes": [],
-            "version": "==2017.11.5"
+            "version": "==2018.1.18"
         },
         "chardet": {
             "hashes": [],
@@ -41,7 +45,7 @@
         },
         "cssselect": {
             "hashes": [],
-            "version": "==1.0.1"
+            "version": "==1.0.3"
         },
         "cycler": {
             "hashes": [],
@@ -69,27 +73,23 @@
         },
         "matplotlib": {
             "hashes": [],
-            "version": "==2.1.1"
+            "version": "==2.1.2"
         },
         "numpy": {
             "hashes": [],
-            "version": "==1.13.3"
-        },
-        "olefile": {
-            "hashes": [],
-            "version": "==0.44"
+            "version": "==1.14.0"
         },
         "pandas": {
             "hashes": [],
-            "version": "==0.21.1"
+            "version": "==0.22.0"
         },
         "peewee": {
             "hashes": [],
-            "version": "==2.10.2"
+            "version": "==3.0.13"
         },
         "pillow": {
             "hashes": [],
-            "version": "==4.3.0"
+            "version": "==5.0.0"
         },
         "psycopg2": {
             "hashes": [],
@@ -101,7 +101,7 @@
         },
         "pyquery": {
             "hashes": [],
-            "version": "==1.3.0"
+            "version": "==1.4.0"
         },
         "python-dateutil": {
             "hashes": [],
@@ -115,6 +115,14 @@
             "hashes": [],
             "version": "==2.18.4"
         },
+        "scikit-learn": {
+            "hashes": [],
+            "version": "==0.19.1"
+        },
+        "scipy": {
+            "hashes": [],
+            "version": "==1.0.0"
+        },
         "seaborn": {
             "hashes": [],
             "version": "==0.8.1"
@@ -122,6 +130,10 @@
         "six": {
             "hashes": [],
             "version": "==1.11.0"
+        },
+        "tushare": {
+            "hashes": [],
+            "version": "==1.1.5"
         },
         "urllib3": {
             "hashes": [],

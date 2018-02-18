@@ -19,6 +19,10 @@ matplotlib = "*"
 fire = "*"
 wordcloud = "*"
 seaborn = "*"
+"beautifulsoup4" = "*"
+tushare = "*"
+scipy = "*"
+scikit-learn = "*"
 
 
 [dev-packages]
