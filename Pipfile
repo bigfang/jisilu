@@ -1,12 +1,9 @@
 [[source]]
-
 url = "https://pypi.doubanio.com/simple"
 verify_ssl = true
 name = "pypi"
 
-
 [packages]
-
 requests = "*"
 pyquery = "*"
 peewee = "*"
@@ -23,7 +20,7 @@ seaborn = "*"
 tushare = "*"
 scipy = "*"
 scikit-learn = "*"
-
+ipython = "*"
+notebook = "*"
 
 [dev-packages]
-
