@@ -1,7 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import arrow
 from pyquery import PyQuery as pq
 from requests import Session, adapters
 import re, hashlib, time
@@ -89,7 +88,7 @@ class FetchPost(object):
         for r in ele:
             rid = pq(r).attr('id').split('_')[-1]
             reply = {
-                rid : {
+                rid: {
                     'id': rid,
                     'post': pid,
                     'content': pq(r)('.markitup-box').text(),
@@ -136,7 +135,7 @@ class FetchUser(object):
     def __parse_last_signin(self, dollar):
         for elem in dollar('.aw-user-center-details dl'):
             if '最后活跃' in pq(elem)('dt span').text():
-                return pq(elem)('dd').text();
+                return pq(elem)('dd').text()
 
     def __extract_user_details(self, dollar):
         prov = dollar('i.i-user-locate + a').text().strip() or None
@@ -193,7 +192,6 @@ class FetchUser(object):
             tid = pq(e)('a').attr('data-id')
             topic = unquote(pq(e)('a').attr('href').split('/')[-1])
             approve, thank = pq(e).remove('a')('span').text().split(' ')
-            user = uid,
 
             topics.append({
                 'id': tid,
@@ -249,8 +247,8 @@ class FetchUser(object):
 
     def multi(self, op=1):
         users = (Users.select(Users.id)
-                .where((Users.id >= op) & (Users.signature >> None))
-                .order_by(Users.id))
+                 .where((Users.id >= op) & (Users.signature >> None))
+                 .order_by(Users.id))
         for u in users:
             rcd = self.single(uid=u.id)
             if not rcd:
