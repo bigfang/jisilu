@@ -22,5 +22,6 @@ scipy = "*"
 scikit-learn = "*"
 ipython = "*"
 notebook = "*"
+jupyterlab = "*"
 
 [dev-packages]
